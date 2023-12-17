@@ -23,6 +23,19 @@ const userRegistration = async (req, res) => {
     }
 
 };
-module.exports = { userRegistration };
+
+const getUserData = async (req, res) => {
+    try {
+        const getData = await userModel.findAll()
+        if (getData) {
+            return res.send({ status: 1, msg: "data get successfully", data: getData })
+        } else {
+            return res.send("data not found")
+        }
+    } catch (error) {
+        console.log(error)
+    }
+}
+module.exports = { userRegistration, getUserData };
 
 
