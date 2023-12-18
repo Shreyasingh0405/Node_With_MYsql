@@ -1,9 +1,17 @@
 const express=require("express")
 const routes= express.Router()
 const controller=require("../controllers/user")
+const booksController = require("../controllers/books")
 const validation=require("../Validations/user")
+const booksValidation=require("../Validations/books")
 routes.post("/user",validation.userValidation,controller.userRegistration)
 routes.get("/user",controller.getUserData)
 routes.post("/userById",controller.getUserDataById)
 routes.post("/loginUser",controller.loginUser)
+
+routes.post("/books",booksValidation.booksValidation,booksController.booksCreated)
+routes.get("/books",booksController.getBooksData)
+routes.post("/booksById",booksController.getBooksDataById)
+routes.post("/updateBooks",booksController.updateBooksDataById)
+routes.post("/deleteBooks",booksController.deleteBooksDataById)
 module.exports=routes
