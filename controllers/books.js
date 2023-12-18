@@ -49,7 +49,29 @@ const getBooksDataById = async (req, res) => {
             where: {
                 id: id
             },
-            attributes: { exclude: ['userId'] },
+            attributes: { eexclude: ['userId','id'] },
+        })
+        if (getData) {
+            return res.send({ status: 1, msg: "data get successfully", data: getData })
+        } else {
+            return res.send({ msg: "data not found" })
+        }
+    } catch (error) {
+        return res.send(error)
+    }
+
+}
+const getBooksDataByUserId = async (req, res) => {
+    try {
+        const { userId } = req.body
+        if (!userId) {
+            return res.send({ status: 0, msg: "bookId is required" })
+        }
+        const getData = await booksModel.findOne({
+            where: {
+                userId: userId
+            },
+            attributes: { exclude: ['userId','id'] },
         })
         if (getData) {
             return res.send({ status: 1, msg: "data get successfully", data: getData })
@@ -87,6 +109,31 @@ const updateBooksDataById = async (req, res) => {
         return res.send(error)
     }
 }
+const updateBooksDataByUserId = async (req, res) => {
+    try {
+        const { userId, bookName, authorName, description, title, } = req.body
+        if (!userId) {
+            return res.send({ status: 0, msg: "bookId is required" })
+        }
+        const updateData = await booksModel.update({
+            bookName: bookName,
+            description: description,
+            title: title,
+            authorName: authorName,
+        }, {
+            where: {
+                userId: userId
+            }
+        })
+        if (updateData) {
+            return res.send({ status: 1, msg: "data update successfully" })
+        } else {
+            return res.send({ msg: "data not found" })
+        }
+    } catch (error) {
+        return res.send(error)
+    }
+}
 
 const deleteBooksDataById = async (req, res) => {
     try {
@@ -112,4 +159,12 @@ const deleteBooksDataById = async (req, res) => {
 
 
 
-module.exports = { booksCreated, getBooksData, getBooksDataById, updateBooksDataById, deleteBooksDataById }
+module.exports = {
+    booksCreated,
+    getBooksData,
+    getBooksDataById,
+    updateBooksDataById,
+    deleteBooksDataById,
+    updateBooksDataByUserId,
+    getBooksDataByUserId
+}
