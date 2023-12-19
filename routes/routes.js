@@ -16,4 +16,5 @@ routes.post("/bookdatabyUserId",booksController.getBooksDataByUserId)
 routes.post("/updateBooks",booksController.updateBooksDataById)
 routes.post("/deleteBooks",booksController.deleteBooksDataById)
 routes.post("/updatebooksbyUserId",booksController.updateBooksDataByUserId)
+//routes.post("/userDataWithBooks",booksController.getUserWithBooks)
 module.exports=routes

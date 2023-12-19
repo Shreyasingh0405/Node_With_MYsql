@@ -1,19 +1,19 @@
 const booksModel = require("../models/books")
 const { uploadToAws } = require("../helpers/aws");
 const CONFIG = require("../config/config");
+const user=require("../models/user");
 const booksCreated = async (req, res) => {
     try {
         const { bookName, authorName, description, title, userId } = req.body
-        let coverPagePath = req.files;
-        const coverPagePaths = coverPagePath.map(files => files.path);
-        const coverPageString = JSON.stringify(coverPagePaths);
+        let coverPage = req.files;
+        coverPage = await uploadToAws("MYSQL", "Books", coverPage)
         const bookData = await booksModel.create({
             bookName: bookName,
             description: description,
             title: title,
             userId: userId,
             authorName: authorName,
-            coverPage: coverPageString
+            coverPage: coverPage
         }
         )
         if (bookData) {
@@ -49,7 +49,7 @@ const getBooksDataById = async (req, res) => {
             where: {
                 id: id
             },
-            attributes: { eexclude: ['userId','id'] },
+            attributes: { eexclude: ['userId', 'id'] },
         })
         if (getData) {
             return res.send({ status: 1, msg: "data get successfully", data: getData })
@@ -71,7 +71,7 @@ const getBooksDataByUserId = async (req, res) => {
             where: {
                 userId: userId
             },
-            attributes: { exclude: ['userId','id'] },
+            attributes: { exclude: ['userId', 'id'] },
         })
         if (getData) {
             return res.send({ status: 1, msg: "data get successfully", data: getData })
@@ -156,7 +156,28 @@ const deleteBooksDataById = async (req, res) => {
         return res.send(error);
     }
 };
-
+// Controller function to get user details with books
+// const getUserWithBooks = async (req, res) => {
+//     try {
+//       const userId = req.body;
+//       booksModel.hasMany(user, { foreignKey: 'userId' });
+//       user.belongsTo(booksModel, { foreignKey: 'userId' });
+//       const userWithBooks = await booksModel.findOne(userId, {
+//         include: user
+//       });
+  
+//       if (!userWithBooks) {
+//         return res.status(404).json({ message: 'User not found' });
+//       }
+  
+//       // Send the user details with books in the response
+//       res.json(userWithBooks);
+//     } catch (error) {
+//       console.error('Error:', error);
+//       res.status(500).json({ message: 'Internal server error' });
+//     }
+//   };
+  
 
 
 module.exports = {
@@ -166,5 +187,6 @@ module.exports = {
     updateBooksDataById,
     deleteBooksDataById,
     updateBooksDataByUserId,
-    getBooksDataByUserId
+    getBooksDataByUserId,
+    //getUserWithBooks
 }

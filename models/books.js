@@ -18,7 +18,7 @@ const Books = sequelize.define("Books", {
         allowNull: false
     },
     coverPage: {
-        type: DataTypes.STRING,
+        type: DataTypes.JSON,
         allowNull: false
     },
     userId: {
@@ -26,5 +26,5 @@ const Books = sequelize.define("Books", {
         allowNull: false
     },
 })
-module.exports=Books
+module.exports = Books
 
